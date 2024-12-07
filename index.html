@@ -3,44 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>动态背景图片</title>
+    <title>背景图片动态切换</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
             height: 100vh;
-            overflow: hidden;
-            transition: background-image 1s ease-in-out; /* 渐变过渡效果 */
+            background-size: cover;
+            background-position: center;
+            transition: background-image 2s ease-in-out; /* 渐变效果 */
+        }
+
+        .content {
+            color: white;
+            font-size: 2em;
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 <body>
 
-<script>
-   async function fetchBackgroundImage() {
-    try {
-        // 使用 no-cors 模式获取图片
-        const response = await fetch('https://www.dmoe.cc/random.php', {
-            method: 'GET',
-            mode: 'no-cors', // 禁用 CORS 限制
-        });
+    <div class="content">
+        背景正在更新...
+    </div>
 
-        // 因为是 no-cors 模式，无法获取响应内容，我们直接使用图片的 URL
-        const imageUrl = response.url;
+    <script>
+        // 定义获取图片URL的函数
+        function getNewBackgroundImage() {
+            fetch('https://t.mwm.moe/fj', {
+                method: 'GET',
+                mode: 'no-cors' // no-cors模式，避免CORS错误
+            })
+            .then(response => {
+                // 由于是no-cors模式，不能读取响应体，所以这里直接假设接口返回的是一个图片URL
+                // 获取图片URL
+                const imageUrl = 'https://t.mwm.moe/fj'; // 示例接口URL
+                changeBackground(imageUrl);
+            })
+            .catch(error => {
+                console.error('无法获取背景图片:', error);
+            });
+        }
 
-        // 设置图片为背景
-        document.body.style.backgroundImage = `url(${imageUrl})`;
-    } catch (error) {
-        console.error('获取背景图片失败:', error);
-    }
-}
+        // 定义背景切换的函数
+        function changeBackground(imageUrl) {
+            // 动态设置背景图片
+            document.body.style.backgroundImage = `url(${imageUrl})`;
+        }
 
-    // 页面加载时先设置一次背景图片
-    fetchBackgroundImage();
+        // 设置定时器，每分钟获取新图片
+        setInterval(getNewBackgroundImage, 60000);
 
-    // 每 60 秒刷新一次背景图片
-    setInterval(fetchBackgroundImage, 60000);
-</script>
+        // 初次加载时获取背景图片
+        getNewBackgroundImage();
+    </script>
 
 </body>
 </html>
