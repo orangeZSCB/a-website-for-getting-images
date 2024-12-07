@@ -38,6 +38,9 @@
         function changeBackground(imageUrl) {
             // 动态设置背景图片
             document.body.style.backgroundImage = `url(${imageUrl})`;
+
+            // 打印当前的图片URL到控制台
+            console.log('背景图片已更新:', imageUrl);
         }
 
         // 设置定时器，每分钟获取新图片
