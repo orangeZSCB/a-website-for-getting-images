@@ -17,17 +17,23 @@
 <body>
 
 <script>
-    // 定义获取背景图片的函数
-    async function fetchBackgroundImage() {
-        try {
-            // 从接口获取图片 URL
-            const response = await fetch('https://www.dmoe.cc/random.php');
-            const imageUrl = await response.text(); // 假设接口返回的是图片 URL
-            document.body.style.backgroundImage = `url(${imageUrl})`;
-        } catch (error) {
-            console.error('获取背景图片失败:', error);
-        }
+   async function fetchBackgroundImage() {
+    try {
+        // 使用 no-cors 模式获取图片
+        const response = await fetch('https://t.mwm.moe/fj', {
+            method: 'GET',
+            mode: 'no-cors', // 禁用 CORS 限制
+        });
+
+        // 因为是 no-cors 模式，无法获取响应内容，我们直接使用图片的 URL
+        const imageUrl = response.url;
+
+        // 设置图片为背景
+        document.body.style.backgroundImage = `url(${imageUrl})`;
+    } catch (error) {
+        console.error('获取背景图片失败:', error);
     }
+}
 
     // 页面加载时先设置一次背景图片
     fetchBackgroundImage();
