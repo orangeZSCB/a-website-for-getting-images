@@ -1,60 +1,72 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>背景图片切换</title>
+    <title>背景图片动态切换</title>
     <style>
-        /* 页面和背景样式 */
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000;
-            transition: background-image 1s ease-in-out; /* 渐变过渡效果 */
-        }
-
-        /* 页面内容容器 */
-        .content {
-            color: white;
-            font-size: 24px;
-            text-align: center;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 2s ease-in-out; /* 渐变效果 */
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>随机背景图片</h1>
-        <p>背景将每一分钟更新一次。</p>
-    </div>
 
     <script>
-        // 获取背景图片并更新背景的函数
-        function updateBackground() {
-            // 使用fetch请求API
-            fetch('https://www.dmoe.cc/random.php?return=json')
-                .then(response => response.json())
-                .then(data => {
-                    // 提取返回的 imgurl
-                    const imgUrl = data.imgurl;
-                    
-                    // 更新背景图片
-                    document.body.style.backgroundImage = `url(${imgUrl})`;
-                })
-                .catch(error => {
-                    console.error('获取背景图片失败:', error);
-                });
+        // 定义获取图片URL的函数
+        function getNewBackgroundImage() {
+            fetch('https://t.mwm.moe/fj', {
+                method: 'GET',
+                mode: 'no-cors' // no-cors模式，避免CORS错误
+            })
+            .then(response => {
+                // 假设接口返回的是一个图片地址
+                // 获取当前时间戳，防止缓存
+                const timestamp = new Date().getTime();
+                const imageUrl = 'https://t.mwm.moe/fj' + '?_=' + timestamp;
+
+                // 在图片加载完成后再更新背景
+                loadImage(imageUrl);
+            })
+            .catch(error => {
+                console.error('无法获取背景图片:', error);
+            });
         }
 
-        // 初次加载页面时更新背景
-        updateBackground();
+        // 创建一个新图片对象并加载
+        function loadImage(imageUrl) {
+            const img = new Image();  // 创建一个新的Image对象
+            img.src = imageUrl;
 
-        // 每分钟更新背景一次
-        setInterval(updateBackground, 60000); // 60000ms = 1分钟
+            // 图片加载完成后才进行背景更新
+            img.onload = function() {
+                changeBackground(imageUrl);
+            };
+
+            img.onerror = function() {
+                console.error('图片加载失败:', imageUrl);
+            };
+        }
+
+        // 定义背景切换的函数
+        function changeBackground(imageUrl) {
+            // 动态设置背景图片
+            document.body.style.backgroundImage = `url(${imageUrl})`;
+
+            // 打印当前的图片URL到控制台
+            console.log('背景图片已更新:', imageUrl);
+        }
+
+        // 设置定时器，每分钟获取新图片
+        setInterval(getNewBackgroundImage, 60000);
+
+        // 初次加载时获取背景图片
+        getNewBackgroundImage();
     </script>
+
 </body>
 </html>
