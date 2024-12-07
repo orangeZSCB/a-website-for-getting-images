@@ -12,24 +12,9 @@
             background-position: center;
             transition: background-image 2s ease-in-out; /* 渐变效果 */
         }
-
-        .content {
-            color: white;
-            font-size: 2em;
-            text-align: center;
-            padding: 20px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
     </style>
 </head>
 <body>
-
-    <div class="content">
-        背景正在更新...
-    </div>
 
     <script>
         // 定义获取图片URL的函数
@@ -39,9 +24,9 @@
                 mode: 'no-cors' // no-cors模式，避免CORS错误
             })
             .then(response => {
-                // 由于是no-cors模式，不能读取响应体，所以这里直接假设接口返回的是一个图片URL
-                // 获取图片URL
-                const imageUrl = 'https://t.mwm.moe/fj'; // 示例接口URL
+                // 由于是no-cors模式，无法直接读取响应体内容
+                // 假设接口返回的是一个图片URL，我们将其硬编码为接口返回的图片地址
+                const imageUrl = 'https://t.mwm.moe/fj'; // 这里假设接口返回了一个图片地址
                 changeBackground(imageUrl);
             })
             .catch(error => {
